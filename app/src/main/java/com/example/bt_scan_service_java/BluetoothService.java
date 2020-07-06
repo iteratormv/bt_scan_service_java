@@ -30,8 +30,6 @@ public class BluetoothService extends Service {
 
     private static final int REQUEST_ENABLE_BT = 1;
     private static final String SPP_UUID = "e1ec7041-83ac-4d9d-8ec7-16f7c3bc5470";
-//    private static final String SPP_UUID = "00001101-0000-1000-8000-00805F9B34FB";4150bf8e-b65f-11ea-b3de-0242ac130004
-
 
     ScanDevice sd;
     BluetoothDevice bluetoothDevice;
@@ -49,7 +47,6 @@ public class BluetoothService extends Service {
         super.onCreate();
         sd = new ScanDevice();
         Log.d(LOG_TAG, "onCreate");
-
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // Device doesn't support Bluetooth
@@ -58,13 +55,9 @@ public class BluetoothService extends Service {
             Log.d(LOG_TAG, "Device support Bluetooth");
             Log.d(LOG_TAG, bluetoothAdapter.getName());
             Log.d(LOG_TAG, bluetoothAdapter.getAddress());
-            //\       Log.d(TAG, bluetoothAdapter.getBluetoothLeAdvertiser());
         }
-
-
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-       //     startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             Log.d(LOG_TAG, "Bluetooth isn't enabled");
         }else{
             Log.d(LOG_TAG, "Bluetooth is enabled");
@@ -83,22 +76,13 @@ public class BluetoothService extends Service {
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 Log.d(LOG_TAG, i + ". " + deviceName + " " + deviceHardwareAddress);
             }
-//            connectThread = new ConnectThread(bluetoothDevice);
-//            connectThread.start();
             Log.d(LOG_TAG, "connectThread to device - " + bluetoothDevice.getName());
         }
-
     }
-
-
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(LOG_TAG, "onStartCommand");
         someTask();
-     //   stopSelf();
-   //     Log.d(LOG_TAG, "onStartStopself");
         return super.onStartCommand(intent, flags, startId);
- //       return START_REDELIVER_INTENT;
- //       return super.
     }
     public void onDestroy() {
         super.onDestroy();
@@ -113,39 +97,15 @@ public class BluetoothService extends Service {
         Log.d(LOG_TAG, "onBind");
         return null;
     }
-//    public IBinder onBind(Intent intent) {
-//        Log.d(LOG_TAG, "onBind");
-//        return null;
-//    }
     void someTask() {
-
-
-//        new Thread(new Runnable() {
-//            public void run(){
-//                for (int i = 1; i<=10; i++) {
-//                    Log.d(LOG_TAG, "i = " + i);
-//                    try {
-//                        TimeUnit.SECONDS.sleep(1);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                sd.startScan();
-//                stopSelf();
-//            }
-//        }).start();
-if(!isWorked) {
+        if(!isWorked) {
     connectThread = new ConnectThread(bluetoothDevice);
     connectThread.start();
 }
-
     }
-
     private class ConnectThread extends  Thread{
         private BluetoothSocket bluetoothSocket = null;
         private boolean succesess = false;
-        //       public final java.util.UUID MY_UUID = java.util.UUID.fromString("DEADBEEF-0000-0000-0000-000000000000");
-//        BluetoothSocket tmp = null;
         public ConnectThread(BluetoothDevice device){
             Log.d(LOG_TAG, "ConnectThread constructor");
             BluetoothSocket tmp = null;
@@ -153,13 +113,6 @@ if(!isWorked) {
                 Method method = device.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
                 Log.d(LOG_TAG, "ConnectThread method " + method.toString());
                 tmp = (BluetoothSocket) method.invoke(device, 1);
- //               bluetoothSocket = (BluetoothSocket) method.invoke(device, 1);
- //               this.mmDevice = device;
- //               tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
-     //           Log.d(LOG_TAG, "ConnectThread bluetoothSocket " + bluetoothSocket.toString());
-//                Log.d(TAG, "ConnectThread MY_UUID - " + MY_UUID.toString());
-//                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
-//                Log.d(TAG, "ConnectThread tmp - " + tmp.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d(LOG_TAG, "ConnectThread don't get socket " + device.getName());
@@ -177,11 +130,6 @@ if(!isWorked) {
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d(LOG_TAG, "ConnectThread bluetoothSocket don't connect");
-//                runOnUiThread(new Runnable() {
-//                    public void run(){
-//                        Toast.makeText(MainActivity.this, "Can't connect!", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
                 cancel();
             }
             if(succesess){
@@ -203,27 +151,8 @@ if(!isWorked) {
                             e.printStackTrace();
                         }
                         sd.stopScan();
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//
-//                                //   if(tb)
-//                                Label_hello.setText("Enabled");
-//                                sd.startScan();
-//                            }
-//                        });
                     }else {
                         Log.d(LOG_TAG,"+++++++++++++++++Disabled++++++++++++++++++++" + "||"+dtempSend+"||"+tempSend);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//
-//                                //   if(tb)
-//                                Label_hello.setText("Disabled");
-//                            }
-//                        });
                     }
                     connectedThread.write("test send" + i + "\r\n");
                     Log.d(LOG_TAG,"connectThread connectedThread.write(\"test send\" + i + \"\\r\\n\");");
@@ -235,7 +164,6 @@ if(!isWorked) {
                         Log.d(LOG_TAG,"connectThread sleepexeption");
                     }
                 }
-                //               Log.d(TAG,"connectThread success and start");
             }
         }
         public void cancel(){
@@ -250,9 +178,6 @@ if(!isWorked) {
     private class  ConnectedThread extends Thread{
         private final InputStream inputStream;
         private  final OutputStream outputStream;
-
-//        private  boolean isConnected = false;
-
         public ConnectedThread(BluetoothSocket bluetoothSocket){
             Log.d(LOG_TAG, "constructor connectedTHread");
             InputStream inputStream = null;
@@ -266,7 +191,6 @@ if(!isWorked) {
             this.inputStream = inputStream;
             this.outputStream = outputStream;
             isConnected = true;
-
         }
         @Override
         public void run() {
@@ -286,24 +210,9 @@ if(!isWorked) {
                     Log.d(LOG_TAG, "ConnectedThread eof - " + eof);
                     if(eof>0){
                         tempSend=buffer.toString();
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                final String tb = buffer.toString();
                         buffer.delete(0, buffer.length());
-//
-//                             //   if(tb)
-//                                Label_hello.setText(tb);
-//                            }
-//                        });
                     }else{
                         Log.d(LOG_TAG, "ConnectedThread dont read ");
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Label_hello.setText("Button Dissabled");
-//                            }
-//                        });
                     }
                 } catch (IOException e) {
                     Log.d(LOG_TAG,"ConnectedThread cant reed");
